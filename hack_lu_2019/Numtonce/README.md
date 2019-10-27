@@ -11,6 +11,7 @@
 > [tell the forest ranger](https://numtonce.fluxfingersforfuture.fluxfingers.net/submit/)!
 > He might reward you with a cookie :)
 
+![Image of Website](https://github.com/LetzPwn/ctf-writeups/raw/krial057-patch-1/hack_lu_2019/Numtonce/website.png)
 ## TL;DR
 XSS is possible over URL hash. However CSP is set, so no external scripts allowed. Except if nonce tag is correct. Idea is to 
 force the nonce tag to be the same after refreshes by loading the website from a cache. js/css/image files are loaded from cache, the index file itself not. 
@@ -63,7 +64,7 @@ one can see that it is generated using the components of the url after the hasht
 `https://numtonce.fluxfingersforfuture.fluxfingers.net/#numtonce.fluxfingersforfuture.fluxfingers.net<h1>test</h1>`
 
 Next step is to try to embed our javascript code. However, that is where we hit a wall:
-(TODO insert screenshot)
+![Image of CSP error](https://github.com/LetzPwn/ctf-writeups/raw/krial057-patch-1/hack_lu_2019/Numtonce/csp.png)
 A CSP header was set to not allow scripts, except if the nonce tag or the scripts sha256 was correct:
 
 `Content-Security-Policy: default-src 'none'; script-src 'sha256-CRtdY47bt+vWDdsuOTTeizFLvSy49h32pVgpWlyN0TU=' 'nonce-117bc8c1d6ead80e5b6ad3f3eca4921e'; img-src 'self'; style-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'none';`
