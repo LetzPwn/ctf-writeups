@@ -34,8 +34,8 @@ lorem ipsum
 ## Lessons learned
 lorem ipsum
 
-# CHecklist before publishing this writeup
-- [ ] Change the date and title in the filename
+# Checklist before publishing this writeup
+- [ ] Change the date and title of the filename itself
 - [ ] Change the date and title inside the properties in the top of the file
 - [ ] Change the other properties in the top of the file
 - [ ] Fill in the different sections: Description, TL;DR; Complete Writeup; Final Solution; Lessons learned
