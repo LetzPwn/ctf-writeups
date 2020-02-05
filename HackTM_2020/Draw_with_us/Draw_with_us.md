@@ -13,22 +13,6 @@ author: "Alain K."
 ## Description
 > Come draw with us!
 > [http://167.172.165.153:60000/](http://167.172.165.153:60000/), 
-> Hint! Changing your color is the first step towards happiness.
->---
-layout: writeup
-title:  "Draw with us"
-source: "https://fluxfingersforfuture.fluxfingers.net/challenges/29"
-solves: "85/1528"
-date:   2020-02-05 17:10:05 +0200
-event: "HackTM CTF 2020"
-categories: [writeup]
-ctf_categories: [web, node.js, javascript]
-author: "Alain K."
----
-
-## Description
-> Come draw with us!
-> [http://167.172.165.153:60000/](http://167.172.165.153:60000/), 
 > Author: stackola
 > Hint! Changing your color is the first step towards happiness.
 > [Source code](stripped.js)
