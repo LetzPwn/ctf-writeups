@@ -65,7 +65,7 @@ The 2nd point reminded me of UTF case folding attacks. So I checked some special
 
 After a lot of unsuccesful tries, I gave up with the unicode bypass and spent some time to abuse the non-strict eqauality check. 
 As we can pass any valid JSON, I tried the following as username:
-```
+```javascript
 {
   username: ["hack","t","m"]
 }
@@ -73,7 +73,7 @@ As we can pass any valid JSON, I tried the following as username:
 
 this failed because toLowerCase() and toUpperCase() are not defined on arrays. But otherwise it would have worked as `username.length >= 3` and because of the non-strict equality check `["hack","t","m"] == "hacktm"` would have resulted in true. Another idea was to use an object as username:
 
-```
+```javascript
 {
   username: {"toUpperCase":"hacktm", "toLowerCase": "hacktm"}
 }
@@ -87,7 +87,7 @@ So I looked at the rest of the code and tried to make sense of it. The applicati
 
 
 Next step was to look into a strange `init` function: 
-```
+```javascript
 app.post("/init", (req, res) => {
 
   let { p = "0", q = "0", clearPIN } = req.body;
@@ -124,7 +124,7 @@ app.post("/init", (req, res) => {
 
 Here, the last line is very interesting. It signs a new valid JWT token with an id that gets calculated by user input. This is exactly what we need to get a valid JWT for admin access! Also the signing is not protected by any checks(there is an if condition with `pwHash == target && clearPIN === _clearPIN`, however the signing happens afterwards outside the if condition). 
 So now the big question is: what input do we need to give to get an adminId of 0? The adminId is calculated here:
-```
+```javascript
   let adminId = pwHash
     .split("")
     .map((c, i) => c.charCodeAt(0) ^ target.charCodeAt(i))
@@ -137,14 +137,14 @@ Looking at the `updateUser` function again, there is some code with which one ca
 2. `n` and `p` are blacklisted 
 
 1st point I gave up before, but if I managed to bypass the `n` and `p` blacklist, I was very confident that I was on the right track and I would tackle the UTF-8 case-folding again. So, let's analyze the `n` and `p` blacklist code. `n` and `p` are blacklisted by a function similar to this one: 
-```
+```javascript
 let blacklist = ["p", "n", "port"]; if(!blacklist.includes(userRequest)) return rights[userRequest];
 ```
 As I already knew that the user input can be any JSON object, I opened a javascript console and played around to find a non-string datatype, that can be passed as lookup index to an object and still work. I found that passing an array with a single value worked. So `rights[["n"]]` returned the same result as `rights["n"]`! Furthermore, `blacklist.include(["n"])` returns false, which is exactly what we want.
 
 Now in theory, I had figured everything out. But I couldn't test it on the server as I didn't find a working UTF-8 case folding character. So what to do if you can't find a valid character in the UTF-8 spec but supsect there being one? Exactly: Open a javascript console and try out every single UTF-8 character. Here is the function I wrote:
 
-```
+```javascript
 for(i=0;i<100000;i++){ //Increase if needed
     out = String.fromCharCode(i);
 		if(out.toLowerCase() == "k" && out.toUpperCase() != "K") console.log(out);
