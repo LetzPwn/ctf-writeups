@@ -14,7 +14,7 @@ author: "Alain K."
 ## Description
 > Come draw with us!  
 > [http://167.172.165.153:60000/](http://167.172.165.153:60000/),  
-> Author: stackola. 
+> Author: stackola.  
 > Hint! Changing your color is the first step towards happiness.  
 > [Source code](stripped.js). 
 
