@@ -7,6 +7,7 @@ date:   2020-02-05 17:10:05 +0200
 event: "HackTM CTF 2020"
 categories: [writeup]
 ctf_categories: [web, node.js, javascript]
+image: "website.png"
 author: "Alain K."
 ---
 
