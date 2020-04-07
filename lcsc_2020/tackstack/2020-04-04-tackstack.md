@@ -1,3 +1,12 @@
+---
+layout: writeup
+title:  "tackstack"
+date:   2020-04-04 17:10:05 +0200
+event: "LCSC CTF 2020"
+categories: [writeup]
+ctf_categories: [web, sql]
+author: "punshLineLama"
+---
 # tackstack
 
 ## TL;DR
