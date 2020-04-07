@@ -3,7 +3,7 @@
 ## TL;DR
  Exploit format string vuln, by dumping all strings from memory with the `%i$s`, for i in range(1,100).
 
-## Background
+## Description
 The challenge was in the binary exploitation category, gave 100 points and had the following description:
 ```
 Have you ever played Jenga? Tack Stack is like that game, but with tacks!
