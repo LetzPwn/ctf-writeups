@@ -5,7 +5,7 @@ date:   2020-04-04 17:10:05 +0200
 event: "LCSC CTF 2020"
 categories: [writeup]
 image: img/chall.png
-ctf_categories: [web, sql]
+ctf_categories: [pwn, format string]
 author: "punshLineLama"
 ---
 # tackstack
