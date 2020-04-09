@@ -18,7 +18,7 @@ Exploit the C implementation of integers to enter a negative number
 ## Description
 Upon connection to the service that is provided, we are greeted by Count Dracula that asks us for a number to count up to and says that he can't handle negative numbers
 
-![dracula](img/dracula1.PNG)
+![dracula](img/dracula.PNG)
 
 When trying to directly enter a negative number, Dracula says that he can't count to that so we need to find another way.
 In the C language, integers can be represented in two ways:
