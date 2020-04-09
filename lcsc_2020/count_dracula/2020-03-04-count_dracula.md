@@ -4,7 +4,7 @@ title:  "Count Dracula"
 date:   2020-03-04 17:10:05 +0200
 event: "LCSC CTF 2020"
 categories: [writeup]
-image: img/dracula1.PNG
+image: img/dracula.PNG
 ctf_categories: [Binary Exploitation]
 author: "Trigleos"
 ---
@@ -30,6 +30,6 @@ Both are represented with 32 bits. The normal integer however can represent both
 
 In this case, a normal int was used. A normal int uses the most significant bit to tell wether a number is positive (0) or negative (1), which means that positive numbers can only go up to 2**31 - 1 = 2147483647. Anything beyond will need the first bit to be represented and will thus appear as a negative number. With that in mind, when we try to enter 2147483648, we actually get -2147483648 which the service accepts. We are then treated to a nice ASCII sequence during which the program "explodes" and get the flag at the end
 
-![ASCII sequence](img/dracula2.PNG)
+![ASCII sequence](img/dracula3.PNG)
 
-![flag](img/dracula3.PNG)
+![flag](img/dracula2.PNG)
