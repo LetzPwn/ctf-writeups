@@ -113,6 +113,7 @@ This function looks very similar to the previous function.
 Its also not possible to overflow the user buffer, but there is also a format string vulnerability.
 We will use it to overwrite the return address with the help of the addresses, which were leaked by the previous format string vulnerability.
 
+The plan is to leak addresses with the first format string vulnerability. With the leaked addresses, we can overwrite some return address with the address of the *win* function to get the flag.
 
 ## Exploitation
 The first step is to leak some addresses from the stack, and check if we find some useful values.
