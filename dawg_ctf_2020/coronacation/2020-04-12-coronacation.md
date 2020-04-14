@@ -15,11 +15,11 @@ image: "img/thumbnail.png"
 
 ## Description
 The challenge was in the pwn category and gave 400 points.
-A executable was provided.
+An executable was provided.
 
 ## TL;DR
-Use the first format string vulnerability to leak addresses, from which you can calculate the return address of the relevant return address.
-Then overwrite that return address with the address of the win function with the second format string vulnerability.
+Use the first format string vulnerability to leak addresses, from which you can calculate the address of the relevant return address and *win* function.
+Then overwrite that return address with the address of the *win* function with the second format string vulnerability.
 
 ## Information Gathering
 ### Check Security Measures
@@ -33,9 +33,9 @@ NX:       NX enabled
 PIE:      PIE enabled
 ```
 We can see that the binary has no stack canary and has **PIE** enabled.
-*PIE* stands for Position-Independent-Execution. This means that the elf is loaded into a random position in  the virtual memory, instead of a fixed address.
+**PIE** stands for Position-Independent-Execution. This means that the elf is loaded into a random position in  the virtual memory, instead of a fixed address.
 
-We also see that there is *no* stack canary. Thus a buffer overflow might be possible.
+We also see that there is **no** stack canary. Thus a buffer overflow might be possible.
 
 ### Decompiling The Binary
 The next step is to decompile the binary with ghidra to examine what is going on and determine possible security flaws.
@@ -191,7 +191,7 @@ Lets have a closer look at the payload:
 
 ### Grabbing The Flag
 
-After the *close_borders* function return, the win function should be executed and we can grab the flag.
+After the *close_borders* function returns, the win function should be executed and we can grab the flag.
 
 ```python
 a = p.recvuntil("}")
@@ -215,5 +215,5 @@ The whole script and the binary and example flag are in the `src/` directory.
 ## Lessons learned
 - Check if addresses have null bytes.
 - Try to overwrite as few bytes as possible
-- Use `%i$lx` to find the relevant address on the stack, then write by replacing it with `%i$hn`.
+- Use `%i$lx` to find the relevant address on the stack, then replacing it with `%i$hn` to overwrite the referenced memory.
 - always use a gdb plugin like *gef*, *peda* or *pwndbg*
