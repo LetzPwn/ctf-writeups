@@ -181,7 +181,7 @@ payload = "a"*(8-len_last_two)+"%"+str(last_two_bytes-(8-len_last_two))+"x%8$hn.
 Lets have a closer look at the payload:
 - The first part `"a"*(8-len_last_two)` is simply some padding, such that the *ret_address* will be aligned on the stack.
 
-- The second part `"%"+str(last_two_bytes-(8-len_last_two))+"x"` writes *last_two_bytes* many characters to the stdout.
+- The second part `"%"+str(last_two_bytes-(8-len_last_two))+"x"` writes *last_two_bytes*  many characters to the stdout (including the padding bytes from the first payload part).
 
 - The third part `%8$hn` writes the number of printed/written characters the 8th address on the stack. Which is in our case our *ret_addr* which is written to the stack in part four of the payload.
 
