@@ -51,7 +51,7 @@ We see that we get some values from the stack.
 
 A format string vulnerability occurs in C, when the program prints a user-controlled buffer without the right formatting. E.g.:
 
-```C
+```c
 
 char str1[20];
 

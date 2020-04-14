@@ -25,7 +25,7 @@ Then overwrite that return address with the address of the win function with the
 ### Check Security Measures
 The provided binary is a 64 bit elf which is not stripped, which means that it contains the original function names such as *main* or *__libc_start_main*.
 With the `checksec` command from pwntools, one can check the implemented security measures:
-```bash
+```shell
 Arch:     amd64-64-little
 RELRO:    Full RELRO
 Stack:    No canary found
@@ -43,7 +43,7 @@ The next step is to decompile the binary with ghidra to examine what is going on
 After skimming through the code, two security critical functions can be identified, namely: *play_game* and *close_borders* (Note: *no_panic* also has a security flaw, but its basically the same as *close_borders* and only either is reached. Thus only *close_borders* is considered. If this side-note confuses you, you can just ignore it.).
 
 When decompiling *play_game* is looks like this:
-```C
+```c
 void play_game(void)
 {
   char user_input [64];
@@ -81,7 +81,7 @@ Now lets have a look at the *close_borders* function, which will get called afte
 
 The decompiled *close_borders* functions look like this:
 
-```C
+```c
 void close_borders(void)
 
 {
