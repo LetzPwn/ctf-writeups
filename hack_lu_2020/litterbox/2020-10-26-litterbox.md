@@ -1,6 +1,6 @@
 ---
 layout: writeup
-title:  "Numtonce"
+title:  "Litter Box"
 source: "https://fluxfingersforfuture.fluxfingers.net/challenges/29"
 solves: "3/671"
 date:   2020-10-26 11:10:05 +0200
@@ -21,7 +21,7 @@ First of all, I want to give a huge shoutout to [@fluxfingers](https://twitter.c
 
 ## Source Code
 The challenge was purely a XSS challenge, so no server side trickeries. The source code was also very short:
-```html | index.html
+```html
 <html>
     <body>
         <script>
@@ -39,7 +39,7 @@ The challenge was purely a XSS challenge, so no server side trickeries. The sour
 ```
 
 The source code of main.js:
-```js | main.js
+```js
 (async () => {
     const urlParams = new URLSearchParams(location.search)
     let src = urlParams.get('src') ? urlParams.get('src') : 'sandbox.html'
@@ -62,7 +62,7 @@ It's pretty clear that we need to somehow pass the condition on line 5 in index.
 ## Baby steps
 To reach the `eval` call, we first need to execute `onmessage`. This can be done by calling `postMessage` on the window. Let's give it a try by embedding the site in an iframe of one of our own controlled websites and execute postMessage on it:
 
- ```html | attack.html
+ ```html
  <html>
 <html>
   <body>
@@ -101,7 +101,7 @@ I knew of a way to make `e.source` equal to `null`.
 ##### Make `e.source` be `null`
 One can force `e.source` to be `null` by destroying the window that executed the `postMessage` before the `onMessage`is received by the other window! Let's give it a shot:
 
-```html | attack.html
+```html
 <html>
 <html>
   <body>
@@ -152,7 +152,7 @@ During this time that the script is loading, the Javascript Scheduer is free to 
 
 So let's try to race condition postMessage/onmessage to execute while the `main.js` script is loading:
 
-```html | attack.html
+```html
 <html>
 <html>
   <body>
