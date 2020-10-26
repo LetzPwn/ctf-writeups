@@ -4,7 +4,7 @@ title:  "Litter Box"
 source: "https://fluxfingersforfuture.fluxfingers.net/challenges/29"
 solves: "3/671"
 date:   2020-10-26 11:10:05 +0200
-event: "Hack.lu 2029 CTF"
+event: "Hack.lu 2020 CTF"
 categories: [writeup]
 ctf_categories: [web, XSS]
 author: "Alain K."
