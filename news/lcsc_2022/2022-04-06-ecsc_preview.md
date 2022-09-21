@@ -1,3 +1,4 @@
+---
 layout: news
 title:  "ECSC 2022 Qualifications"
 date:   2022-02-20 17:10:05 +0200
