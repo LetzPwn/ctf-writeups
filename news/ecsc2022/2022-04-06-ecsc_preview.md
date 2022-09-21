@@ -1,3 +1,12 @@
+layout: news
+title:  "ECSC 2022 Qualifications"
+date:   2022-02-20 17:10:05 +0200
+categories: [news]
+tags: ["ECSC", "Qualifications"]
+author: "Mike L."
+image: "logo.png"
+---
+
 ## Hello dear cybersecurity enthusiats, 
 Its that time of the year again. The LCSC is starting soon.
 As every year, the LCSC is used as a qualification for the national team to participate in the ECSC. 
