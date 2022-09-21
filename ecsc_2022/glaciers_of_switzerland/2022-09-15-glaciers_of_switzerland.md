@@ -52,16 +52,6 @@ And pushed to the repo:
 
 We get a reverse shell back and get the flag. (Sorry I did not save the flag.)
 
-## Final Solution
-lorem ipsum
 
 ## Lessons learned
 Its often easier to use a GUI tool to explore all branches and commits of a git repo.
-
-# Checklist before publishing this writeup
-- [ ] Change the date and title of the filename itself
-- [ ] Change the date and title inside the properties in the top of the file
-- [ ] Change the other properties in the top of the file
-- [ ] Fill in the different sections: Description, TL;DR; Complete Writeup; Final Solution; Lessons learned
-- [ ] You can change the section strucute if you want (For small challenges a TL;DR is unnecessary)
-- [ ] Delete this section from the markdown!
