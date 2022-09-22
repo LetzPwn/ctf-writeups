@@ -1,0 +1,25 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger parent repository update 
+        run: |
+          curl -X POST https://api.github.com/repos/vikduf/letzpwn-website/dispatches \
+          -H 'Accept: application/vnd.github.everest-preview+json' \
+          -u smallstepman:${{ secrets.ACCESS_TOKEN }} \
+          --data '{"event_type": "writeups update", "client_payload": { "repository": "arst" }}'
