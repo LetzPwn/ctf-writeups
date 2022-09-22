@@ -3,7 +3,7 @@ layout: writeup
 categories: [writeup]
 
 # Mandatory parameters
-title:  "Numtonce"
+title:  "Healthcheck 1"
 author: "Jaak"
 date:   2022-09-03 01:10:05 +0200
 event: "Balsn CTF 2022"
