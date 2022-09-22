@@ -1,6 +1,6 @@
 # ctf-writeups
 CTF Events, Writeups of CTF challenges and news for the LetzPwn.com website.
-
+ 
 ## How to add a new writeup
 - Create a folder for the ctf competition inside the ctf-writeups folder.
 - If the folder doesn't exist yet. 
