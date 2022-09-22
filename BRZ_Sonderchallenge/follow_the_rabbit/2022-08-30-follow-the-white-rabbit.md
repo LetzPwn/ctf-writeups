@@ -100,8 +100,6 @@ Okay so, now we have a password (obtained from the cookie) and a potential usern
 And indeed, we can download the file:
 ![](img/followthewhiterabbit13_downloadfile.png)
 
-![Uploading file..._lhyuccc9g]()
-
 The file is a PE32 Windows executable:
 
 ![](img/followthewhiterabbit14_filecommand.png)
@@ -128,7 +126,7 @@ So no direct luck there.
 
 Playing around a little with the string I found using the `strings` command, I decide to try it as directory (after all it is still a web challenge and apart from using the tor browser), up until now it did not have to do that much with web. And indeed, in said directory, we find the flag:
 
-![](img/followthewhiterabbit18_flag.txt)
+![](img/followthewhiterabbit18_flag.txt.png)
 
 `CSC:{e68e11be8b70e435c65aef8ba9798ff7775c361e}`
 
