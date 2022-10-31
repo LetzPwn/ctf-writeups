@@ -3,7 +3,7 @@ layout: writeup
 title:  "BabyElectron"
 source: "flu.xxx"
 solves: "19/718"
-date:   2020-10-26 11:10:05 +0200
+date:   2022-10-29 11:10:05 +0200
 event: "Hack.lu 2022 CTF"
 categories: [writeup]
 ctf_categories: [web, XSS, RCE]
