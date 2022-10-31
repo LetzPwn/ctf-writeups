@@ -1,7 +1,7 @@
 ---
 layout: news
 title:  "LetzPwn is officially an NPO and other news"
-date:   2022-20-10 13:37:73 +0200
+date:   2022-20-10 13:37:25 +0200
 categories: [news]
 tags: [award, cyber security week]
 author: "Mike L."
