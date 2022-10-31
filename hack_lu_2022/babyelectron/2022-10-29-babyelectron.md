@@ -23,8 +23,6 @@ The electon app could be used used to buy, sell and report real estate objects.
 You can also report a real estate listing, which is then checked by a bot. 
 The goal is to get code execution of the machine of the bot, which is visiting the reported listing.
 
-## TL;DR
-
 
 # The solution
 The solution comprised two steps: 
