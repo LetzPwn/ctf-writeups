@@ -1,4 +1,4 @@
----
+cd im---
 layout: writeup
 categories:
   - writeup
@@ -11,7 +11,7 @@ solves: "365"
 ctf_categories:
   - web
   - Request Smuggling
-image: thumbnail_image.png
+image: "img/thumbnail_image.png"
 ---
 
 ## Description
@@ -23,9 +23,9 @@ This is exploited in a frontend reverse proxy server to forge a request to a bac
 
 ## Complete Writeup
 We are greeted with the screen below. Looks like the application lets us chose between a couple of games:
-![[ApacheBlaze/thumbnail_image.png]]
+![img/thumbnail_image.png]
 Before we look at specific code, let's get a feeling for what we're deeling with. The provided files look as follows:
-![[treeCommand.png]]
+![img/treeCommand.png]
 There seems to be not that much code. The backend just has the `app.py` and then there is some frontend stuff involved. Let's take a look at the `app.py` first:
 ```python
 from flask import Flask, request, jsonify
@@ -165,7 +165,7 @@ CMD ["sh", "/app/uwsgi/start_uwsgi.sh"]
 It downloads httpd (Apache HTTP Server) version 2.4.55 and compiles it with a list of modules. We got a version number, let's google for vulnerabilities. This reveals the following URL, with an HTTP Request Splitting/Smuggling vulnerability right at the top, relevant to the version the server is running on.
 https://httpd.apache.org/security/vulnerabilities_24.html
 The description of the vulnerability (CVE-2023-25690) states that certain modules have to be used and have to be configured in a certain way for the vulnerability to be present.
-![[ApacheHTTPServerVulnerabilities.png]]
+![img/ApacheHTTPServerVulnerabilities.png]
 Checking the `httpd.conf` file, we can see that the server is actually set up with some sort of multi-layer architecture, using one reverse proxy, one load balancing proxy and 2 backends; this proxy/backend architecture points to the request smuggling vulnerability mentioned above. Taking a closer look, one can even identify the specified module (`mod_proxy`) and recognize the pattern (marked in the above screenshot) along with the necessary RewriteRule for the vulnerability to apply:
 ```
 ServerName _
@@ -258,7 +258,7 @@ Host: localhost:1337
 Connection: close
 ```
 These requests are now forwarded to the load balancing proxy (I will receive the response for the first request), the load balancing proxy appends the `Host` header (`dev.apacheblaze.local`) of the request as `X-Forwarded_Host` header, this is sent to the backend and the check is passed.
-![[burpPayloadFlagScreenshot.png]]
+![img/burpPayloadFlagScreenshot.png]
 `HTB{1t5_4ll_4b0ut_Th3_Cl1ck5}`
 ## Final Solution
 ```
