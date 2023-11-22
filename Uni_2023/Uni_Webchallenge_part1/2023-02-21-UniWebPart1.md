@@ -12,7 +12,7 @@ event: "University CTF"
 source: "N/A"
 solves: "N/A"
 ctf_categories: [web, XSS, JWT]
-image: "thumbnail_image.png"
+image: "img/thumbnail_image.png"
 ---
 
 ## Description

@@ -22,9 +22,9 @@ Exploiting method confusion in Go's html/template package for RCE.
 
 When visiting the website, we are greeted with the following screen, automatically requesting a `/render` endpoint with a GET parameter `page` set to `index.tpl`:
 
-![img/RenderQuest/thumbnail_image.png]
+![](img/RenderQuest/thumbnail_image.png)
 To get an idea of what we're dealing with, let's look at the files we got for download:
-![img/Pasted image 20231111225407.png]
+![](img/Pasted image 20231111225407.png)
 Seems like the most interesting one will be `main.go`. We also detect the `index.tpl` file that has put as GET request parameter to the `/render` endpoint.
 
 So what does this web application seem to do? Let's take a look at the code in `main.go`:
@@ -247,15 +247,15 @@ For each request, it fetches the location information of the client's IP address
 The application also constructs a `RequestData` object containing client IP, user agent, client IP location info, and server info, which is then passed to the template for rendering. This `RequestData` object (instantiated as `reqData`) is later also used as data parameter in the `.Execute()` of the template: `tmpl.Execute(w, reqData)`.
 Let's see if we can provide a template that will be rendered by the server. As an example, let's take their `index.tpl` file and change it so that something will be rendered. The only change I made is instead of the line `<li>ServerInfo.OS</li>` I put `<li>{{ .ServerInfo.OS }}</li>` (you can call any of the properties of the object that is being rendered (`reqData` object in the data parameter of the `Execute()` function) by putting a `.` and then the name of the property, e.g. `.ServerInfo.OS` here).
 I copy the file into another directory, start a python http server and tunnel that using ngrok. I provide the url to my index.tpl to the web app and indeed instead of this
-![img/Pasted image 20231111233915.png]
+![](img/Pasted image 20231111233915.png)
 we got this
-![img/Pasted image 20231111233849.png]
+![](img/Pasted image 20231111233849.png)
 So it seems it is being rendered properly. Now apart from template injection, there is one other thing that stands out: Can we just tell it to "render" the flag file, à la path traversal in the `page` parameter?
 There are 2 problems with that.
 1. First of all, we got an entrypoint.sh script, executed by the Dockerfile on startup of the container, that changes the flag file name so that it incorporates 10 random characters, so we don't know what file we're looking for exactly:
-![img/Pasted image 20231111234146.png]
+![](img/Pasted image 20231111234146.png)
 2. Second, there is actually some code that verifies if the given path is within the allowed directory: 
-![img/Pasted image 20231111234506.png]
+![](img/Pasted image 20231111234506.png)
 
 So, onto template injection. Since we dont have to inject into a specific parameter that is being rendered in a fixed template, but we can provide the WHOLE template ourselves, this should be easy?!
 Problem is, we are not dealing with a template package like Jinja2 for Python (where `eval()`could be called within the template) or EJS for Javascript (also allowing javascript execution if untrusted unescaped data is allowed within the template): We are dealing with html/template package for Golang. This package is designed to be secure by default and does not allow the execution of arbitrary code or external commands, which limits the scope of an attacker massively. So it seems like this challenge is not about finding a crack in the web app to inject a payload into the template, but to find a weakness in Go's html/template package itself, having complete control over the template.
@@ -293,7 +293,7 @@ The FetchServerInfo method has a parameter that is being executed as a system co
 {{.FetchServerInfo "cat / \`ls / | grep -e flag\`"}}
 This also provides an easy workaround with the issue of the random name of the flag file. Using this payload in a template provided to the web app gives us the flag:
 
-![img/Pasted image 20231112002304.png]
+![](img/Pasted image 20231112002304.png)
 
 `- HTB{qu35t_f0r_th3_f0rb1dd3n_t3mpl4t35!!}`
 ## Final Solution
